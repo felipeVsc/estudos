@@ -43,12 +43,79 @@ DWs podem ser dividios em camadas:
 
 * **Camada de dados**: onde os dados são extraídos e carregados utilizando ELTs, de modo que irão puxar dados de outros SGBDs, por exemplo.
 
+* **Camada de staging**: onde são feitas as operações de ETL para transformar os dados
+
 * **Camada semântica**: Reestruturação dos dados para consultas mais rápidas e para possibilitar as análises
 
 * **Camada de análise**: Acesso aos dados por meio dos usuários, com dashboards de visualização e etc.
 
-#### Star Schemas
+A ideia aqui é ter na camada de dados coisas como batch e streaming, que irão ser salvos no staging, onde serão realizadas na camada semântica as operações de ETL necessárias para salvar no Data Warehouse que depois será acessado pelos usuários na camada de análise.
 
+![Arquitetura](imgs/img_ar.png)
+### Modelagem
+
+Star Schemas são uma das formas mais comuns de se modelar um DW, dado que cria multidimensões. Multidimensões são importantes para dar uma característica de diferentes níveis de agregação de dados, de modo que aumenta a performance.
+
+Dois conceitos importantes no Star Schema são os de **Facts** e **Dimensions**.
+
+* Facts: São representações de acontecimentos no DW. Por exemplo, uma venda.
+* Dimensions: Representam as entidades relacionadas a um fato. Por exemplo, o nome do vendedor, o produto e o valor são entidades de uma venda.
+
+Facts representam uma medida do negócio da empresa, sendo a intersecção de diversas dimensões. É como se fosse uma "análise" de diversas tabelas de dimensões.
+
+Por exemplo, um Fact pode ser uma tabela de venda do dia, que irá ter métricas como quantidade de produtos vendidos e valor total arrecadado, além de FK como "Data", "Produto" e etc. Ela irá agregar as informações de outras tabelas como a tabela de vendas e etc e irá já gerar uma "análise".
+
+![Exemplo de tabela de fatos](imgs/image.png)
+![Alt text](image.png)
+
+Armazena-se sempre uma medida, quantidade de produtos em um dia, quantidade de exames. Sempre a ideia é você extrair uma consulta, popular um BI.
+
+As dimensões são o que eu irei precisar para realizar essas consultas.
+
+Considerando a coordenada (P1, T1, H1), significa que foram realizados 21 exames no paciente 1, no trimeste 1 e no hospital 1
+![Alt text](image-2.png)
+
+#### Aggregation Levels
+
+Atributos de dimensões podem ter um nível de relacionamento, compondo hierarquias nos dados. Essa noção de *hierarquia* é importante em DWs, de modo que quao mais baixo você está na hierarquia, maior o nivel de detalhamento.
+
+#### Formas de modelar
+
+Existem alguns tipos de modelagem que podem ser feitas: Multidimensional, Relacional, Hibrida
+
+As duas formas de modelar mais famosas são o star schema e o snow-flake. Sempre são compostos de uma tabela de Facts central e várias tabelas satélites de Dimensions.
+
+O Star Schema é o principal, tendo uma tabela de fatos com uma única tabela para cada dimensão. Já o snowflake, é uma variação do star schema em que as tabelas de dimensões são organizadas em hierarquias.
+
+Exemplo de esquema estrela com tabelas de fatos e de dimensões:
+![Alt text](image-1.png)
+
+### Star Schema
+
+Tabela de fatos no centro, geralmente com poucas linhas mas muitas colunas (muitos dados). Armazena as medidas e as referências (FK) para as tabelas de dimensão. A PK é uma chave composta das FKs
+
+As tabelas de dimensão ficam na borda e apresentam dados não normalizados![Alt text](image-3.png)
+
+
+### Snowflake
+
+Diferença é que os dados hierarquicos são normalizados, não ocorrendo redundâncias. Apenas a hierarquia de menor granularidade que é ligada a tabela de fatos.
+
+Retirar a redundância diminui o tamanho, mas pode piorar a performance se for necessário vários joins para se ter um bom desempenho
+
+Exemplo de hierarquia:
+
+Trimeste > Semestre > Ano
 ### DW Espaciais
 
-### ETL Espaciais em DW
+DW espaciais serão basicamente DWs que irão ter o suporte tanto para operações não-espaciais quanto para operações espaciais, podendo armazenar dados espaciais. 
+
+O fluxo de criação de um SDW é basicamente:
+
+* Extrair os dados.
+* Realizar a modelagem multidimensional do DW
+* Transformar os dados para serem representados na modelagem
+* Carregar os dados no DW
+* SOLAP para visualização 
+
+### Operações OLAP em DW

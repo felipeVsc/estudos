@@ -37,7 +37,7 @@ Data lakes são mais genéricos que o DW, de modo que vão conter todos os tipos
 
 ### Arquitetura de DW
 
-![Arquitetura de um DW](imgs/dw_arc.png)
+![Arquitetura de um DW](imgs_dw//dw_arc.png)
 
 DWs podem ser dividios em camadas:
 
@@ -51,7 +51,7 @@ DWs podem ser dividios em camadas:
 
 A ideia aqui é ter na camada de dados coisas como batch e streaming, que irão ser salvos no staging, onde serão realizadas na camada semântica as operações de ETL necessárias para salvar no Data Warehouse que depois será acessado pelos usuários na camada de análise.
 
-![Arquitetura](imgs/img_ar.png)
+![Arquitetura](imgs_dw//img_ar.png)
 ### Modelagem
 
 Star Schemas são uma das formas mais comuns de se modelar um DW, dado que cria multidimensões. Multidimensões são importantes para dar uma característica de diferentes níveis de agregação de dados, de modo que aumenta a performance.
@@ -65,15 +65,15 @@ Facts representam uma medida do negócio da empresa, sendo a intersecção de di
 
 Por exemplo, um Fact pode ser uma tabela de venda do dia, que irá ter métricas como quantidade de produtos vendidos e valor total arrecadado, além de FK como "Data", "Produto" e etc. Ela irá agregar as informações de outras tabelas como a tabela de vendas e etc e irá já gerar uma "análise".
 
-![Exemplo de tabela de fatos](imgs/image.png)
-![Alt text](image.png)
+![Exemplo de tabela de fatos](imgs_dw//image.png)
+![Alt text](imgs_dw/image.png)
 
 Armazena-se sempre uma medida, quantidade de produtos em um dia, quantidade de exames. Sempre a ideia é você extrair uma consulta, popular um BI.
 
 As dimensões são o que eu irei precisar para realizar essas consultas.
 
 Considerando a coordenada (P1, T1, H1), significa que foram realizados 21 exames no paciente 1, no trimeste 1 e no hospital 1
-![Alt text](image-2.png)
+![Alt text](imgs_dw/image-2.png)
 
 #### Aggregation Levels
 
@@ -88,13 +88,13 @@ As duas formas de modelar mais famosas são o star schema e o snow-flake. Sempre
 O Star Schema é o principal, tendo uma tabela de fatos com uma única tabela para cada dimensão. Já o snowflake, é uma variação do star schema em que as tabelas de dimensões são organizadas em hierarquias.
 
 Exemplo de esquema estrela com tabelas de fatos e de dimensões:
-![Alt text](image-1.png)
+![Alt text](imgs_dw/image-1.png)
 
 ### Star Schema
 
 Tabela de fatos no centro, geralmente com poucas linhas mas muitas colunas (muitos dados). Armazena as medidas e as referências (FK) para as tabelas de dimensão. A PK é uma chave composta das FKs
 
-As tabelas de dimensão ficam na borda e apresentam dados não normalizados![Alt text](image-3.png)
+As tabelas de dimensão ficam na borda e apresentam dados não normalizados![Alt text](imgs_dw/image-3.png)
 
 
 ### Snowflake
